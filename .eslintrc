@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "@wisersolutions",
+    "@wisersolutions/eslint-config/jest"
+  ]
+}

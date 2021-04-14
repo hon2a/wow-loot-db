@@ -1,0 +1,40 @@
+{
+  "name": "@hon2a/wow-loot-db",
+  "version": "0.0.0",
+  "description": "Scripts to manage WoW loot lists and associated EPGP pricing data.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hon2a/wow-loot-db"
+  },
+  "author": "Jan Konopásek",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "module": "./es/index.js",
+  "files": [
+    "/es",
+    "/lib"
+  ],
+  "scripts": {
+    "format": "prettier --write \"src/**/*.js\" --loglevel warn",
+    "lint": "eslint -f @wisersolutions/eslint-formatter-idea ./src",
+    "test": "jest 'src/'",
+    "build": "transpile-js",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@wisersolutions/eslint-config": "^2.0.1",
+    "@wisersolutions/eslint-formatter-idea": "^1.0.7",
+    "@wisersolutions/transpile-js": "^0.0.18",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-jest": "^24.3.1",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.13.10",
+    "core-js": "^3.9.1"
+  }
+}
