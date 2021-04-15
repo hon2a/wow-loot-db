@@ -18,13 +18,40 @@ const saveResults = (path, results) => {
   console.log(`Results saved to ${resolvedPath}.`)
 }
 
-const renderProgressBar = (count, total, barLength = 20) => {
-  const progress = count / total
+const renderProgressBar = (idx, total, barLength = 20) => {
+  const ordinal = idx + 1
+  const progress = ordinal / total
   logUpdate(
     `[${range(barLength)
-      .map(idx => (idx / barLength < progress ? '=' : ' '))
-      .join('')}] ${count}/${total}`
+      .map(charIdx => (charIdx / barLength < progress ? '=' : ' '))
+      .join('')}] ${ordinal}/${total}`
   )
+}
+
+async function lootToJson(input, output) {
+  const inputPath = resolve(input || ASSETS.LOOT_TABLE_CSV)
+  console.log(`Loading loot table from ${inputPath} and parsing CSV…`)
+  try {
+    const items = await loadLootTable(inputPath)
+    console.log(`${items.length} items parsed.`)
+    saveResults(output || ASSETS.LOOT_TABLE_JSON, items)
+  } catch (errors) {
+    console.error('Failed to load or parse CSV!', errors)
+  }
+}
+
+async function loadDetails(input, output) {
+  const inputPath = resolve(input || ASSETS.LOOT_TABLE_JSON)
+  console.log(`Loading loot table from ${inputPath}…`)
+  const source = readFileSync()
+  const items = JSON.parse(source)
+  console.log(`Fetching item details…`)
+  for (let i = 0, l = items.length; i < l; ++i) {
+    renderProgressBar(i, l)
+    const { url } = items[i]
+    items[i].item = await loadItemDetails(url)
+  }
+  saveResults(output || ASSETS.DETAILS_JSON, items)
 }
 
 async function app() {
@@ -34,22 +61,10 @@ async function app() {
     output
   } = parseArgs(process.argv.slice(2), { string: ['input', 'output'] })
   switch (script) {
-    case 'loot-to-json': {
-      const items = await loadLootTable(resolve(input || ASSETS.LOOT_TABLE_CSV))
-      saveResults(output || ASSETS.LOOT_TABLE_JSON, items)
-      break
-    }
-    case 'load-details': {
-      const source = readFileSync(resolve(input || ASSETS.LOOT_TABLE_JSON))
-      const items = JSON.parse(source)
-      for (let i = 0, l = items.length; i < l; ++i) {
-        renderProgressBar(i, l)
-        const { url } = items[i]
-        items[i].item = await loadItemDetails(url)
-      }
-      saveResults(output || ASSETS.DETAILS_JSON, items)
-      break
-    }
+    case 'loot-to-json':
+      return lootToJson(input, output)
+    case 'load-details':
+      return loadDetails(input, output)
     default:
       console.log('No script selected.')
   }
