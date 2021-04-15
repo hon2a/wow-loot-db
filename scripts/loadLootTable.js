@@ -17,6 +17,4 @@ function loadLootTable(path) {
   )
 }
 
-module.exports = {
-  loadLootTable: loadLootTable
-}
+module.exports = { loadLootTable }
