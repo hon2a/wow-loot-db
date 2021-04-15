@@ -1,4 +1,5 @@
 module.exports = {
   ...require('./loadLootTable'),
-  ...require('./loadItemDetails')
+  ...require('./loadItemDetails'),
+  ...require('./detailsToCsv')
 }

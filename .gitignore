@@ -10,6 +10,7 @@ node_modules
 # build
 /es
 /lib
+/export
 .nyc_output
 .coverage-cache
 coverage
